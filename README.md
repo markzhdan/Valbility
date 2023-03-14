@@ -224,7 +224,7 @@ Riot Games does not endorse or sponsor this project.
 [issues-shield]: https://img.shields.io/github/issues/markzhdan/Valbility
 [issues-url]: https://github.com/markzhdan/Valbility/issues
 [license-shield]: https://img.shields.io/github/license/markzhdan/Valbility
-[license-url]: https://github.com/markzhdan/Valbility/blob/master/valbility/LICENSE.txt
+[license-url]: https://github.com/markzhdan/Valbility/blob/master/LICENSE.txt
 [valbility-screenshot]: images/Valbility-preview.png
 [electron.js]: https://img.shields.io/badge/Electron-47848F?style=for-the-badge&logo=electron&logoColor=000000
 [electron-url]: https://www.electronjs.org/
