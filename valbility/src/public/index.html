@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Valbility</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dosis:wght@800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <nav class="menubar">
+      <div class="logo-title">
+        <img
+          src="../../assets/icons/256_256.png"
+          width="50px"
+          height="39px"
+          alt="Valbility logo"
+        />
+        <h1>VALBILITY</h1>
+      </div>
+
+      <div class="utility">
+        <button id="minimize-btn" class="nav-button">
+          <i class="fa-solid fa-window-minimize"></i>
+        </button>
+
+        <button id="exit-btn" class="nav-button">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </nav>
+    <main>
+      <section class="left">
+        <h2 id="hotkeys-text">Hotkeys</h2>
+        <form class="voice-hotkeys">
+          <div class="key-group">
+            <input type="button" id="mute-key" value="ctrl" />
+            <label for="mute">Mute</label>
+          </div>
+
+          <div class="key-group">
+            <input type="button" id="unmute-key" value="alt" />
+            <label for="unmute">Unmute</label>
+          </div>
+
+          <div class="key-group">
+            <input type="button" id="voice-key" value="v" />
+            <label for="voice">Voice</label>
+          </div>
+        </form>
+
+        <h2 id="voice-text">Voice Threshold</h2>
+        <div class="microphone">
+          <button id="mic">
+            <i class="fa-solid fa-microphone" id="mic-icon"></i>
+          </button>
+
+          <section class="voice-bar">
+            <div class="voice">
+              <div id="progress"></div>
+              <div id="cover-box"></div>
+            </div>
+
+            <div class="input-slider">
+              <input
+                type="range"
+                min="0"
+                max="145"
+                value="40"
+                class="slider"
+                id="threshold-slider"
+              />
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="right">
+        <h2 id="audio-text">Audio</h2>
+        <div class="audio-switches">
+          <div class="mute-game switch">
+            <input type="checkbox" id="mute-game-checkbox" class="toggle" />
+            <label for="mute-game-checkbox">Mute Game</label>
+          </div>
+
+          <div class="mute-voice switch">
+            <input type="checkbox" id="mute-voice-checkbox" class="toggle" />
+            <label for="mute-voice-checkbox">Mute Voice</label>
+          </div>
+        </div>
+
+        <div class="activity">
+          <div class="game-activity">
+            <img
+              src="../../assets/VALORANT-logos/V_Bug_Negative_Red.png"
+              alt="VALORANT Logo"
+              width="40px"
+              height="40px"
+            />
+            <h3 id="game-status">Offline</h3>
+          </div>
+
+          <section class="settings-menu">
+            <button class="settings-cog" id="settings-button">
+              <i class="fa-solid fa-gear"></i>
+            </button>
+
+            <section id="menu-popup">
+              <div class="top-buttons">
+                <button class="reset-button" id="reset-button">
+                  <i class="fa-solid fa-rotate-left"></i>
+                </button>
+
+                <p>Soon...</p>
+              </div>
+
+              <div class="links">
+                <a id="twitter" class="link">
+                  <i class="fa-brands fa-twitter"></i>
+                </a>
+
+                <a id="github" class="link">
+                  <i class="fa-brands fa-github"></i>
+                </a>
+
+                <a id="website" class="link">
+                  <i class="fa-solid fa-globe"></i>
+                </a>
+              </div>
+            </section>
+          </section>
+        </div>
+      </section>
+      <h4 id="version">Version not detected</h4>
+    </main>
+
+    <script type="module" defer src="./renderer.js"></script>
+    <script type="module" defer async src="./voice-audio.js"></script>
+  </body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "name": "valbility",
+  "productName": "Valbility",
+  "version": "0.1.0",
+  "description": "Voice and audio accessibility tool for VALORANT",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\"",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "Valbility",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "./assets/icons/256_256.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "installerIcon": "./assets/icons/256_256.ico",
+      "uninstallerIcon": "./assets/icons/256_256.ico",
+      "uninstallDisplayName": "Valbility Uninstaller",
+      "license": "license.md",
+      "allowToChangeInstallationDirectory": false
+    }
+  },
+  "keywords": [
+    "Valbility",
+    "VALORANT",
+    "Voice Activity",
+    "Game Mute",
+    "Auto Mute",
+    "Accessibility"
+  ],
+  "author": {
+    "name": "Mark Zhdan",
+    "email": "valbility@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "active-win": "^8.0.3",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.1.0",
+    "node-audio-volume-mixer": "^1.0.3",
+    "ps-list": "^6.3.0",
+    "robotjs": "^0.6.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.5",
+    "@electron-forge/maker-deb": "^6.0.5",
+    "@electron-forge/maker-rpm": "^6.0.5",
+    "@electron-forge/maker-squirrel": "^6.0.5",
+    "@electron-forge/maker-zip": "^6.0.5",
+    "electron": "^23.1.1",
+    "electron-builder": "^23.6.0"
+  }
+}
