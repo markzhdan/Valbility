@@ -76,7 +76,7 @@
   <a href="http://valbility.com/" target="_blank"><img src="images/Valbility-preview.png" alt="Valbility screenshot preview"/></a>
 </p>
 
-Valbility was created with accessbility in mind. There are a few features that aren't implemented into VALORANT so I decided to create a simple widget-like app to introduce them into the game.
+Valbility was created with accessibility in mind. There are a few features that aren't implemented into VALORANT so I decided to create a simple widget-like app to introduce them into the game.
 
 Having automatic voice activity frees up a finger/key and lets you focus on more important inputs during an intense match.
 
@@ -133,7 +133,7 @@ See <a href="https://github.com/markzhdan/Valbility/releases">Releases</a> to do
 
   - Mute/Unmute voice detection
   - Set voice activity threshold
-    - Once threshold is reached, the voice keybind will be presses if VALORANT is in focus
+    - Once threshold is reached, the voice keybind will be pressed if VALORANT is in focus
 
 - Audio
   - **Mute Game**: Mutes game when VALORANT is unfocused
