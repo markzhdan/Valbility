@@ -76,7 +76,7 @@
   <a href="http://valbility.com/" target="_blank"><img src="images/Valbility-preview.png" alt="Valbility screenshot preview"/></a>
 </p>
 
-Valbility was created with accessbility in mind. There are a few features that aren't implemented into VALORANT so I decided to create a simple widget-like app to introduce them into the game.
+Valbility was created with accessibility in mind. There are a few features that aren't implemented into VALORANT so I decided to create a simple widget-like app to introduce them into the game.
 
 Having automatic voice activity frees up a finger/key and lets you focus on more important inputs during an intense match.
 
@@ -125,15 +125,15 @@ See <a href="https://github.com/markzhdan/Valbility/releases">Releases</a> to do
 
 - Hotkeys
 
-  - **Mute**: Mutes voice detection
-  - **Unmute**: Unmutes voice detection
+  - **Mic**: Toggles voice detection
+  - **Audio**: Toggles game sound
   - **Voice**: VALORANT in-game voice bind
 
 - Voice Activity
 
   - Mute/Unmute voice detection
   - Set voice activity threshold
-    - Once threshold is reached, the voice keybind will be presses if VALORANT is in focus
+    - Once threshold is reached, the voice keybind will be pressed if VALORANT is in focus
 
 - Audio
   - **Mute Game**: Mutes game when VALORANT is unfocused
@@ -145,8 +145,8 @@ See <a href="https://github.com/markzhdan/Valbility/releases">Releases</a> to do
 
 ## Roadmap
 
-- [ ] Single toggle mute keybind
-- [ ] Mute game/voice keybind
+- [x] Single toggle mute keybind
+- [x] Mute game/voice keybind
 - [ ] Decrease volume on unfocus instead of muting.
 - [ ] Optimizations
 
@@ -218,13 +218,13 @@ Riot Games does not endorse or sponsor this project.
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [download-shield]: https://img.shields.io/badge/download-D30011?style=for-the-badge
-[download-url]: https://github.com/markzhdan/Valbility/releases/download/0.1.0/Valbility-Setup.exe
+[download-url]: https://github.com/markzhdan/Valbility/releases/download/0.2.0/Valbility-Setup.exe
 [releases-shield]: https://img.shields.io/github/downloads/markzhdan/Valbility/total
 [releases-url]: https://github.com/markzhdan/Valbility/releases
 [issues-shield]: https://img.shields.io/github/issues/markzhdan/Valbility
 [issues-url]: https://github.com/markzhdan/Valbility/issues
 [license-shield]: https://img.shields.io/github/license/markzhdan/Valbility
-[license-url]: https://github.com/markzhdan/Valbility/blob/master/valbility/LICENSE.txt
+[license-url]: https://github.com/markzhdan/Valbility/blob/master/LICENSE.txt
 [valbility-screenshot]: images/Valbility-preview.png
 [electron.js]: https://img.shields.io/badge/Electron-47848F?style=for-the-badge&logo=electron&logoColor=000000
 [electron-url]: https://www.electronjs.org/

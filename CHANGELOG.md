@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - Expected: March 20, 2023
+## [Unreleased] - Expected: March 28, 2023
 
 ### Upcoming Features
 
-- Single toggle mute keybind
-- Mute game/voice keybind
-- Decrease volume on unfocus instead of muting.
+- Decrease volume on unfocus/hotkey instead of muting.
+- Remove/unbind hotkey to blank.
+- UI improvements for Audio and Settings sections.
+- Possible game overlay for mic status?
 
 ### QOL
 
@@ -21,8 +22,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Known Bugs
 
 - Certain key binds crash app.
-  - Currently prevents/rebinds to previous hotkey
 - VALORANT stays muted when restarted without Valbility open.
+
+## [0.2.0] - March 19, 2023
+
+Install new release from [releases](https://github.com/markzhdan/Valbility/releases/tag/0.2.0)
+
+### Added
+
+- Toggle Mic: Single hotkey to mute and unmute voice functionality.
+- Toggle Audio: Single hotkey to mute and unmute in-game sound.
+
+### Changed
+
+- Removed unmute/mute keybinds (replaced).
+- Updated hotkey bind labels.
+- Removed unnecessary electron-store config keys.
+
+### Fixed
+
+- Bug where game/voice was not muted/unmuted when started.
+- Bug where mute hotkey did not function before VALORANT was in focus at least once.
 
 ## [0.1.0] - March 14, 2023
 

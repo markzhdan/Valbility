@@ -1,7 +1,7 @@
 {
   "name": "valbility",
   "productName": "Valbility",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Voice and audio accessibility tool for VALORANT",
   "main": "src/main.js",
   "scripts": {

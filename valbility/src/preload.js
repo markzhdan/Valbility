@@ -6,13 +6,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Renderer to main functions
   muteProcesses: (muteGame, muteVoice, status) =>
     ipcRenderer.send("mute-processes", muteGame, muteVoice, status),
-  registerNewHotkey: (configKey, newKey, keyFunctionality) =>
-    ipcRenderer.send(
-      "register-new-hotkey",
-      configKey,
-      newKey,
-      keyFunctionality
-    ),
+  registerNewHotkey: (configKey, newKey) =>
+    ipcRenderer.send("register-new-hotkey", configKey, newKey),
   getKeyboardMap() {
     return ipcRenderer.sendSync("get-keyboard-map");
   },
@@ -47,14 +42,14 @@ window.addEventListener("DOMContentLoaded", () => {
   const muteGameElement = document.getElementById("mute-game-checkbox");
   const muteVoiceElement = document.getElementById("mute-voice-checkbox");
   const thresholdSlider = document.getElementById("threshold-slider");
-  const muteHotkey = document.getElementById("mute-key");
-  const unmuteHotkey = document.getElementById("unmute-key");
+  const toggleVoiceKey = document.getElementById("toggle-voice-key");
+  const toggleGameKey = document.getElementById("toggle-game-key");
   const voiceHotkey = document.getElementById("voice-key");
 
   muteGameElement.checked = config.get("is-game-muted");
   muteVoiceElement.checked = config.get("is-voice-muted");
   thresholdSlider.value = config.get("voice-activity-threshold");
-  muteHotkey.value = keyMap[config.get("mute-key")];
-  unmuteHotkey.value = keyMap[config.get("unmute-key")];
+  toggleVoiceKey.value = keyMap[config.get("toggle-voice-keybind")];
+  toggleGameKey.value = keyMap[config.get("toggle-game-keybind")];
   voiceHotkey.value = keyMap[config.get("valorant-voice-keybind")];
 });

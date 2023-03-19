@@ -128,7 +128,7 @@ nav div {
   background-color: var(--component-background-color);
   color: white;
   font-family: "Dosis", Helvetica, Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
 
   cursor: pointer;
 }
@@ -140,6 +140,8 @@ nav div {
 .key-group label {
   display: block;
   height: auto;
+  word-wrap: break-word;
+  width: 50px;
   font-size: 0.75rem;
 }
 
@@ -348,17 +350,7 @@ input[type="range"]::-webkit-slider-thumb {
   bottom: 2px;
 }
 
-#mute-key:focus {
-  box-shadow: 0px 0px 8px gray;
-  border: 2px solid maroon;
-}
-
-#unmute-key:focus {
-  box-shadow: 0px 0px 8px gray;
-  border: 2px solid maroon;
-}
-
-#voice-key:focus {
+.key-group input:focus {
   box-shadow: 0px 0px 8px gray;
   border: 2px solid maroon;
 }

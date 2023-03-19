@@ -95,29 +95,26 @@ const createWindow = () => {
     muteProcesses(muteGame, muteVoice, status);
   });
 
-  ipcMain.on(
-    "register-new-hotkey",
-    async (e, configKey, newKey, keyFunctionality) => {
-      const oldKey = config.get(configKey);
+  ipcMain.on("register-new-hotkey", async (e, configKey, newKey) => {
+    const oldKey = config.get(configKey);
 
-      globalShortcut.unregister(keyMap[oldKey].replace("\n", ""));
-      config.set(configKey, newKey);
+    globalShortcut.unregister(keyMap[oldKey].replace("\n", ""));
+    config.set(configKey, newKey);
 
-      // Resets keybind back to original keybind if invalid key to prevent app crashing.
-      try {
-        createGlobalShortcut(newKey, keyFunctionality);
-      } catch {
-        config.set(configKey, oldKey);
-        createGlobalShortcut(oldKey, keyFunctionality);
+    // Resets keybind back to original keybind if invalid key to prevent app crashing.
+    try {
+      configKey === "toggle-voice-keybind"
+        ? createVoiceGlobalShortcut(newKey)
+        : createGameGlobalShortcut(newKey);
+    } catch {
+      config.set(configKey, oldKey);
+      mainWindow.webContents.send("update-keybind-text", oldKey, configKey);
 
-        mainWindow.webContents.send(
-          "update-keybind-text",
-          oldKey,
-          keyFunctionality
-        );
-      }
+      configKey === "toggle-voice-keybind"
+        ? createVoiceGlobalShortcut(newKey)
+        : createGameGlobalShortcut(newKey);
     }
-  );
+  });
 
   ipcMain.on("get-keyboard-map", async (event) => {
     event.returnValue = keyMap;
@@ -146,8 +143,7 @@ const createWindow = () => {
 
     // Resets keybinds
     globalShortcut.unregisterAll();
-    createGlobalShortcut(config.get("mute-key"), false);
-    createGlobalShortcut(config.get("unmute-key"), true);
+    createDefaultShortcuts();
 
     // Unmutes processes
     muteProcesses(true, true, false);
@@ -167,8 +163,7 @@ const createWindow = () => {
   });
 
   // Default shortcuts
-  createGlobalShortcut(config.get("mute-key"), false);
-  createGlobalShortcut(config.get("unmute-key"), true);
+  createDefaultShortcuts();
 
   // Load main html to app window
   mainWindow.loadFile(path.join(__dirname, "public/index.html"));
@@ -189,9 +184,11 @@ app.whenReady().then(() => {
   listener.started(async ({ pid, name }) => {
     if (name === "VALORANT.exe") {
       updateStyle(pid, processes.VALORANT, statusStyles.Valorant);
+      muteProcesses(true, false, config.get("is-game-muted"));
     } else if (!processes.VALORANT.started) {
       // Riot Client accesses the correct pid
       updateStyle(pid, processes.RiotClient, statusStyles.RiotClient);
+      muteProcesses(false, true, config.get("is-voice-muted"));
     }
   });
 
@@ -277,14 +274,22 @@ async function muteProcesses(toMuteGame, toMuteVoice, action) {
     // However, the active-win module does retrieve the correct pid.
     // This will be updated in the future so "./process-listener" will use the active-win module instead of ps-list
     // Sometimes ps-works but active win doesnt
-    try {
-      NodeAudioVolumeMixer.setAudioSessionMute(processes.VALORANT.pid, action);
-    } catch {
+
+    // Checks to make sure volume was changed. If not try new pid.
+    const muteStatusBefore = NodeAudioVolumeMixer.isAudioSessionMuted(
+      processes.VALORANT.pid
+    );
+    NodeAudioVolumeMixer.setAudioSessionMute(processes.VALORANT.pid, action);
+    if (
+      muteStatusBefore ===
+      NodeAudioVolumeMixer.isAudioSessionMuted(processes.VALORANT.pid)
+    ) {
+      // If valorant exited
       try {
         const actualPID = await getProcessPID("VALORANT");
         NodeAudioVolumeMixer.setAudioSessionMute(actualPID, action);
       } catch {
-        console.log("An error occurred.");
+        processes.VALORANT.pid = null;
       }
     }
   }
@@ -319,9 +324,25 @@ function updateStyle(pid, processInfo, styles) {
   }, 1000);
 }
 
-function createGlobalShortcut(newKey, action) {
-  // Action: true: startAudio, false: stopAudio
+// Not sure how to refactor. Maybe create class? Difficult because each shortcut needs to be unique
+function createVoiceGlobalShortcut(newKey) {
   globalShortcut.register(keyMap[newKey].replace("\n", ""), () => {
-    mainWindow.webContents.send("toggle-voice", action);
+    const action = config.get("is-mic-enabled");
+    config.set("is-mic-enabled", !action);
+    // Action - true: startAudio, false: stopAudio
+    // Needs to be opposite of set function
+    mainWindow.webContents.send("toggle-voice", !action);
   });
+}
+function createGameGlobalShortcut(newKey) {
+  globalShortcut.register(keyMap[newKey].replace("\n", ""), () => {
+    const action = config.get("is-game-muted");
+    config.set("is-game-muted", !action);
+    muteProcesses(true, false, !action);
+  });
+}
+
+function createDefaultShortcuts() {
+  createVoiceGlobalShortcut(config.get("toggle-voice-keybind"));
+  createGameGlobalShortcut(config.get("toggle-game-keybind"));
 }

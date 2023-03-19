@@ -4,8 +4,8 @@ const muteGameButton = document.getElementById("mute-game-checkbox");
 const muteVoiceButton = document.getElementById("mute-voice-checkbox");
 const thresholdSlider = document.getElementById("threshold-slider");
 
-const muteHotkey = document.getElementById("mute-key");
-const unmuteHotkey = document.getElementById("unmute-key");
+const toggleVoiceKey = document.getElementById("toggle-voice-key");
+const toggleGameKey = document.getElementById("toggle-game-key");
 const voiceHotkey = document.getElementById("voice-key");
 
 const micButton = document.getElementById("mic");
@@ -52,22 +52,18 @@ thresholdSlider.addEventListener("change", () => {
   );
 });
 
-muteHotkey.addEventListener("click", async () => {
-  addNewHotkey(muteHotkey, "mute-key", false);
+toggleVoiceKey.addEventListener("click", async () => {
+  addNewHotkey(toggleVoiceKey, "toggle-voice-keybind");
 });
-unmuteHotkey.addEventListener("click", async () => {
-  addNewHotkey(unmuteHotkey, "unmute-key", true);
+toggleGameKey.addEventListener("click", async () => {
+  addNewHotkey(toggleGameKey, "toggle-game-keybind");
 });
-async function addNewHotkey(button, configKey, keyFunctionality) {
+async function addNewHotkey(button, configKey) {
   let newKeybindCode = await newHotkeyPress();
 
   button.value = keyMap[newKeybindCode];
   button.blur();
-  window.electronAPI.registerNewHotkey(
-    configKey,
-    newKeybindCode,
-    keyFunctionality
-  );
+  window.electronAPI.registerNewHotkey(configKey, newKeybindCode);
 }
 voiceHotkey.addEventListener("click", async () => {
   let newKeybindCode = await newHotkeyPress();
@@ -117,9 +113,9 @@ window.electronAPI.updateStatusStyle((e, text, color) => {
 });
 
 window.electronAPI.updateKeybindText((e, keyValue, keyFunctionality) => {
-  keyFunctionality
-    ? (unmuteHotkey.value = keyMap[keyValue])
-    : (muteHotkey.value = keyMap[keyValue]);
+  keyFunctionality === "toggle-game-keybind"
+    ? (toggleGameKey.value = keyMap[keyValue])
+    : (toggleVoiceKey.value = keyMap[keyValue]);
 });
 
 // Waits and returns next keypress
