@@ -32,6 +32,7 @@ Install new release from [releases](https://github.com/markzhdan/Valbility/relea
 
 - Toggle Mic: Single hotkey to mute and unmute voice functionality.
 - Toggle Audio: Single hotkey to mute and unmute in-game sound.
+- Added bugs
 
 ### Changed
 
