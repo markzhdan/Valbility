@@ -1,0 +1,63 @@
+{
+  "name": "valbility",
+  "productName": "Valbility",
+  "version": "0.2.5",
+  "description": "Voice and audio accessibility tool for VALORANT",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "lint": "echo \"No linting configured\"",
+    "build": "electron-builder"
+  },
+  "repository": "https://github.com/markzhdan/Valbility",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
+  "build": {
+    "appId": "com.valbility.Valbility",
+    "productName": "Valbility",
+    "win": {
+      "artifactName": "${productName}-Setup.${ext}",
+      "target": [
+        "nsis"
+      ],
+      "icon": "./assets/icons/256_256.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "installerIcon": "./assets/icons/256_256.ico",
+      "uninstallerIcon": "./assets/icons/256_256.ico",
+      "uninstallDisplayName": "Valbility Uninstaller",
+      "license": "license.md",
+      "allowToChangeInstallationDirectory": false
+    }
+  },
+  "keywords": [
+    "Valbility",
+    "VALORANT",
+    "Voice Activity",
+    "Game Mute",
+    "Auto Mute",
+    "Accessibility"
+  ],
+  "author": {
+    "name": "Mark Zhdan",
+    "email": "valbility@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@nut-tree/nut-js": "^3.1.1",
+    "active-win": "^8.1.0",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^5.3.0",
+    "node-audio-volume-mixer": "^1.0.3",
+    "prebuild-install": "^7.1.1",
+    "ps-list": "^6.3.0"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.2.10",
+    "electron": "^23.1.1",
+    "electron-builder": "^23.6.0"
+  }
+}
