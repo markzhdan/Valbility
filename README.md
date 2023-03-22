@@ -33,7 +33,7 @@
 <!-- PROJECT SHIELDS -->
 
 <div align="center">
-  
+
 [![Download][download-shield]][download-url]
 
 [![GitHub all releases][releases-shield]][releases-url]
@@ -96,7 +96,8 @@ Muting game sound and voice chat removes the distracting background noise while 
 - [![active-win][npm-active-win]][npm-active-win-url]
 - [![electron-store][npm-electron-store]][npm-electron-store-url]
 - [![ps-list][npm-ps-list]][npm-ps-list-url]
-- [![robotjs][npm-robotjs]][npm-robotjs-url]
+- [![electron-builder][npm-electron-builder]][npm-electron-builder-url]
+- [![nutjs][npm-nut.js]][npm-nut.js-url]
 - [![audio-mixer][npm-audio-mixer]][npm-audio-mixer-url]
 
 Thank you for creating these great modules.
@@ -145,10 +146,10 @@ See <a href="https://github.com/markzhdan/Valbility/releases">Releases</a> to do
 
 ## Roadmap
 
-- [x] Single toggle mute keybind
-- [x] Mute game/voice keybind
+- [x] Single toggle mute keybind.
+- [x] Mute game/voice keybind.
 - [ ] Decrease volume on unfocus instead of muting.
-- [ ] Optimizations
+- [ ] Optimizations.
 
 See the [open issues](https://github.com/markzhdan/Valbility/issues) for a full list of proposed features (and known issues).
 
@@ -218,7 +219,7 @@ Riot Games does not endorse or sponsor this project.
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [download-shield]: https://img.shields.io/badge/download-D30011?style=for-the-badge
-[download-url]: https://github.com/markzhdan/Valbility/releases/download/0.2.0/Valbility-Setup.exe
+[download-url]: https://github.com/markzhdan/Valbility/releases/download/0.2.5/Valbility-Setup.exe
 [releases-shield]: https://img.shields.io/github/downloads/markzhdan/Valbility/total
 [releases-url]: https://github.com/markzhdan/Valbility/releases
 [issues-shield]: https://img.shields.io/github/issues/markzhdan/Valbility
@@ -236,7 +237,9 @@ Riot Games does not endorse or sponsor this project.
 [npm-electron-store-url]: https://www.npmjs.com/package/electron-store
 [npm-ps-list]: https://img.shields.io/badge/ps--list-CB3837?style=for-the-badge-small&logo=npm&logoColor=ffffff
 [npm-ps-list-url]: https://www.npmjs.com/package/ps-list
-[npm-robotjs]: https://img.shields.io/badge/robotjs-CB3837?style=for-the-badge-small&logo=npm&logoColor=ffffff
-[npm-robotjs-url]: https://www.npmjs.com/package/robotjs
+[npm-electron-builder]: https://img.shields.io/badge/electron--builder-CB3837?style=for-the-badge-small&logo=npm&logoColor=ffffff
+[npm-electron-builder-url]: https://www.electron.build/
+[npm-nut.js]: https://img.shields.io/badge/nut.js-CB3837?style=for-the-badge-small&logo=npm&logoColor=ffffff
+[npm-nut.js-url]: https://www.npmjs.com/package/@nut-tree/nut-js
 [npm-audio-mixer]: https://img.shields.io/badge/audio--mixer-CB3837?style=for-the-badge-small&logo=npm&logoColor=ffffff
 [npm-audio-mixer-url]: https://www.npmjs.com/package/node-audio-volume-mixer

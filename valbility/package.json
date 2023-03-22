@@ -1,20 +1,24 @@
 {
   "name": "valbility",
   "productName": "Valbility",
-  "version": "0.2.0",
+  "version": "0.2.5",
   "description": "Voice and audio accessibility tool for VALORANT",
   "main": "src/main.js",
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "start": "electron .",
     "lint": "echo \"No linting configured\"",
     "build": "electron-builder"
   },
+  "repository": "https://github.com/markzhdan/Valbility",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
   "build": {
-    "appId": "Valbility",
+    "appId": "com.valbility.Valbility",
+    "productName": "Valbility",
     "win": {
+      "artifactName": "${productName}-Setup.${ext}",
       "target": [
         "nsis"
       ],
@@ -43,19 +47,16 @@
   },
   "license": "MIT",
   "dependencies": {
-    "active-win": "^8.0.3",
-    "electron-squirrel-startup": "^1.0.0",
+    "@nut-tree/nut-js": "^3.1.1",
+    "active-win": "^8.1.0",
     "electron-store": "^8.1.0",
+    "electron-updater": "^5.3.0",
     "node-audio-volume-mixer": "^1.0.3",
-    "ps-list": "^6.3.0",
-    "robotjs": "^0.6.0"
+    "prebuild-install": "^7.1.1",
+    "ps-list": "^6.3.0"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.5",
-    "@electron-forge/maker-deb": "^6.0.5",
-    "@electron-forge/maker-rpm": "^6.0.5",
-    "@electron-forge/maker-squirrel": "^6.0.5",
-    "@electron-forge/maker-zip": "^6.0.5",
+    "@electron/rebuild": "^3.2.10",
     "electron": "^23.1.1",
     "electron-builder": "^23.6.0"
   }

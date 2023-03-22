@@ -14,7 +14,6 @@ const path = require("path");
 
 // Local Data
 const config = require("./data/store");
-const { keyMap } = require("./data/keyboardMap");
 const { ProcessesListener } = require("./listeners/process-listener");
 const {
   WindowChangeListener,
@@ -24,12 +23,14 @@ const {
 // Node Modules
 const activeWindow = require("active-win");
 const { NodeAudioVolumeMixer } = require("node-audio-volume-mixer");
-const robot = require("robotjs");
+const { keyboard, Key } = require("@nut-tree/nut-js");
+const { autoUpdater } = require("electron-updater");
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require("electron-squirrel-startup")) {
-  app.quit();
-}
+// Updater flags - Needed so it doesn't update twice
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
+keyboard.config.autoDelayMs = 0;
+const isDevMode = false;
 
 const statusStyles = {
   Offline: {
@@ -76,7 +77,7 @@ const createWindow = () => {
     frame: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      devTools: false,
+      devTools: isDevMode,
       sandbox: false,
       nodeIntegration: false, // is default value after Electron v5
       contextIsolation: true, // protect against prototype pollution
@@ -97,27 +98,22 @@ const createWindow = () => {
 
   ipcMain.on("register-new-hotkey", async (e, configKey, newKey) => {
     const oldKey = config.get(configKey);
-
-    globalShortcut.unregister(keyMap[oldKey].replace("\n", ""));
-    config.set(configKey, newKey);
+    globalShortcut.unregister(oldKey);
 
     // Resets keybind back to original keybind if invalid key to prevent app crashing.
     try {
       configKey === "toggle-voice-keybind"
         ? createVoiceGlobalShortcut(newKey)
         : createGameGlobalShortcut(newKey);
+
+      config.set(configKey, newKey);
     } catch {
-      config.set(configKey, oldKey);
       mainWindow.webContents.send("update-keybind-text", oldKey, configKey);
 
       configKey === "toggle-voice-keybind"
-        ? createVoiceGlobalShortcut(newKey)
-        : createGameGlobalShortcut(newKey);
+        ? createVoiceGlobalShortcut(oldKey)
+        : createGameGlobalShortcut(oldKey);
     }
-  });
-
-  ipcMain.on("get-keyboard-map", async (event) => {
-    event.returnValue = keyMap;
   });
 
   ipcMain.on("get-app-version", async (event) => {
@@ -153,13 +149,16 @@ const createWindow = () => {
     // Exits if focused process is not VALOARANT
     const activeWin = await getActiveWindow();
     if (
+      !activeWin ||
       !activeWin.owner ||
       !activeWin.owner.path.endsWith("VALORANT-Win64-Shipping.exe")
     ) {
       return;
     }
 
-    robot.keyToggle(keyMap[config.get("valorant-voice-keybind")], action);
+    action == "down"
+      ? await keyboard.pressKey(Key[config.get("valorant-voice-keybind")])
+      : await keyboard.releaseKey(Key[config.get("valorant-voice-keybind")]);
   });
 
   // Default shortcuts
@@ -167,9 +166,6 @@ const createWindow = () => {
 
   // Load main html to app window
   mainWindow.loadFile(path.join(__dirname, "public/index.html"));
-
-  // Opens devtools
-  // mainWindow.webContents.openDevTools();
 };
 
 // Waits for Electron initialization and creates browser window.
@@ -214,7 +210,7 @@ app.whenReady().then(() => {
 
   const changeListener = new WindowChangeListener();
 
-  changeListener.changed(({ windowInfo }) => {
+  changeListener.changed(async ({ windowInfo }) => {
     const toMuteGame = config.get("is-game-muted");
     const toMuteVoice = config.get("is-voice-muted");
     if (!toMuteGame && !toMuteVoice) {
@@ -240,7 +236,7 @@ app.whenReady().then(() => {
 
       muteProcesses(toMuteGame, toMuteVoice, true);
       // If the user tabs out while talking, it doesnt get stuck in the down press.
-      robot.keyToggle(keyMap[config.get("valorant-voice-keybind")], "up");
+      await keyboard.releaseKey(Key[config.get("valorant-voice-keybind")]);
       return;
     }
   });
@@ -251,6 +247,40 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  // Opens dev tools
+  mainWindow.on("ready-to-show", () => {
+    if (isDevMode) {
+      mainWindow.webContents.openDevTools({ mode: "detach" });
+    }
+  });
+
+  autoUpdater.checkForUpdates();
+});
+
+autoUpdater.on("update-available", (info) => {
+  mainWindow.webContents.send(
+    "update-updater-message",
+    "Downloading update..."
+  );
+  let downloadMessage = autoUpdater.downloadUpdate();
+  mainWindow.webContents.send("update-updater-message", downloadMessage);
+});
+autoUpdater.on("update-not-available", (info) => {
+  mainWindow.webContents.send(
+    "update-updater-message",
+    "Valbility is up to date"
+  );
+  setTimeout(() => {
+    mainWindow.webContents.send("update-updater-message", "");
+  }, "2000");
+});
+autoUpdater.on("update-downloaded", (info) => {
+  mainWindow.webContents.send("update-updater-message", "Restart to update!");
+});
+autoUpdater.on("error", (info) => {
+  console.log(info);
+  mainWindow.webContents.send("update-updater-message", info);
 });
 
 // OS X / macOS specific.
@@ -326,7 +356,7 @@ function updateStyle(pid, processInfo, styles) {
 
 // Not sure how to refactor. Maybe create class? Difficult because each shortcut needs to be unique
 function createVoiceGlobalShortcut(newKey) {
-  globalShortcut.register(keyMap[newKey].replace("\n", ""), () => {
+  globalShortcut.register(newKey, () => {
     const action = config.get("is-mic-enabled");
     config.set("is-mic-enabled", !action);
     // Action - true: startAudio, false: stopAudio
@@ -335,7 +365,7 @@ function createVoiceGlobalShortcut(newKey) {
   });
 }
 function createGameGlobalShortcut(newKey) {
-  globalShortcut.register(keyMap[newKey].replace("\n", ""), () => {
+  globalShortcut.register(newKey, () => {
     const action = config.get("is-game-muted");
     config.set("is-game-muted", !action);
     muteProcesses(true, false, !action);

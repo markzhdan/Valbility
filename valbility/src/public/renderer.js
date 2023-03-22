@@ -17,8 +17,7 @@ const resetButton = document.getElementById("reset-button");
 
 const statusText = document.getElementById("game-status");
 const versionText = document.getElementById("version");
-
-let keyMap = null;
+const updaterText = document.getElementById("updater");
 
 const externalLinkURLS = [
   "https://twitter.com/valbility", // Twitter
@@ -27,8 +26,6 @@ const externalLinkURLS = [
 ];
 
 window.addEventListener("DOMContentLoaded", () => {
-  keyMap = window.electronAPI.getKeyboardMap();
-
   versionText.innerText = `Version • ${window.electronAPI.getValbilityVersion()}`;
 });
 
@@ -59,18 +56,18 @@ toggleGameKey.addEventListener("click", async () => {
   addNewHotkey(toggleGameKey, "toggle-game-keybind");
 });
 async function addNewHotkey(button, configKey) {
-  let newKeybindCode = await newHotkeyPress();
-
-  button.value = keyMap[newKeybindCode];
+  let newKeybind = await newHotkeyPress();
+  button.value = formatKeyInput(newKeybind);
   button.blur();
-  window.electronAPI.registerNewHotkey(configKey, newKeybindCode);
+
+  window.electronAPI.registerNewHotkey(configKey, newKeybind);
 }
 voiceHotkey.addEventListener("click", async () => {
-  let newKeybindCode = await newHotkeyPress();
-  voiceHotkey.value = keyMap[newKeybindCode];
+  let newKeybind = await newHotkeyPress();
+  voiceHotkey.value = formatKeyInput(newKeybind);
   voiceHotkey.blur();
 
-  window.electronAPI.config.set("valorant-voice-keybind", newKeybindCode);
+  window.electronAPI.config.set("valorant-voice-keybind", newKeybind);
 });
 
 micButton.addEventListener("click", () => {
@@ -112,10 +109,14 @@ window.electronAPI.updateStatusStyle((e, text, color) => {
   statusText.style.color = color;
 });
 
+window.electronAPI.updateUpdaterMessage((e, message) => {
+  updaterText.innerText = message;
+});
+
 window.electronAPI.updateKeybindText((e, keyValue, keyFunctionality) => {
   keyFunctionality === "toggle-game-keybind"
-    ? (toggleGameKey.value = keyMap[keyValue])
-    : (toggleVoiceKey.value = keyMap[keyValue]);
+    ? (toggleGameKey.value = formatKeyInput(keyValue))
+    : (toggleVoiceKey.value = formatKeyInput(keyValue));
 });
 
 // Waits and returns next keypress
@@ -123,7 +124,18 @@ function newHotkeyPress() {
   return new Promise((resolve) => {
     document.addEventListener("keydown", onKeyHandler);
     function onKeyHandler(event) {
-      resolve(event.keyCode);
+      document.removeEventListener("keydown", onKeyHandler);
+      // Returns string of key - "PageDown".
+      resolve(event.key);
     }
   });
+}
+
+function formatKeyInput(newKey) {
+  try {
+    const newKeybindArray = newKey.match(/[A-Z][a-z]+|[0-9]+/g);
+    return newKeybindArray.join("\n").toUpperCase();
+  } catch {
+    return newKey.toUpperCase();
+  }
 }

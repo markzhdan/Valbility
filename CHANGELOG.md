@@ -16,13 +16,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### QOL
 
-- Autoupdater
 - Listener optimizations
 
 ### Known Bugs
 
 - Certain key binds crash app.
 - VALORANT stays muted when restarted without Valbility open.
+
+## [0.2.5] - March 21, 2023
+
+Install new release from [releases](https://github.com/markzhdan/Valbility/releases/tag/0.2.5)
+
+### Added
+
+- Auto updater
+- Status message in the bottom left hand corner states:
+  - Checking for update...
+  - Downloading update...
+  - Restart to update!
+
+### Changed
+
+- Migrated from robotjs to nut.js!
+  - Fixes build and prebuild errors.
+  - More compatible keys with electron shortcuts.
+- Removed keyboardMap.js
+- Updated default config to support nut.js.
+- Updated key formater to work with nut.js.
+
+### Fixed
+
+- Build errors with node-abi.
+- Various mute/unmute bugs when VALORANT was opened.
 
 ## [0.2.0] - March 19, 2023
 
@@ -32,7 +57,6 @@ Install new release from [releases](https://github.com/markzhdan/Valbility/relea
 
 - Toggle Mic: Single hotkey to mute and unmute voice functionality.
 - Toggle Audio: Single hotkey to mute and unmute in-game sound.
-- Added bugs
 
 ### Changed
 

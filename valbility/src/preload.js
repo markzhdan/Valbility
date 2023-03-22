@@ -1,6 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron");
 const config = require("./data/store");
-const { keyMap } = require("./data/keyboardMap");
 
 contextBridge.exposeInMainWorld("electronAPI", {
   // Renderer to main functions
@@ -8,9 +7,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.send("mute-processes", muteGame, muteVoice, status),
   registerNewHotkey: (configKey, newKey) =>
     ipcRenderer.send("register-new-hotkey", configKey, newKey),
-  getKeyboardMap() {
-    return ipcRenderer.sendSync("get-keyboard-map");
-  },
   getValbilityVersion() {
     return ipcRenderer.sendSync("get-app-version");
   },
@@ -36,6 +32,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.on("update-status-style", text, color),
   updateKeybindText: (keyValue, keyFunctionality) =>
     ipcRenderer.on("update-keybind-text", keyValue, keyFunctionality),
+  updateUpdaterMessage: (message) =>
+    ipcRenderer.on("update-updater-message", message),
 });
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -49,7 +47,16 @@ window.addEventListener("DOMContentLoaded", () => {
   muteGameElement.checked = config.get("is-game-muted");
   muteVoiceElement.checked = config.get("is-voice-muted");
   thresholdSlider.value = config.get("voice-activity-threshold");
-  toggleVoiceKey.value = keyMap[config.get("toggle-voice-keybind")];
-  toggleGameKey.value = keyMap[config.get("toggle-game-keybind")];
-  voiceHotkey.value = keyMap[config.get("valorant-voice-keybind")];
+  toggleVoiceKey.value = formatKeyInput(config.get("toggle-voice-keybind"));
+  toggleGameKey.value = formatKeyInput(config.get("toggle-game-keybind"));
+  voiceHotkey.value = formatKeyInput(config.get("valorant-voice-keybind"));
 });
+
+function formatKeyInput(newKey) {
+  try {
+    const newKeybindArray = newKey.match(/[A-Z][a-z]+|[0-9]+/g);
+    return newKeybindArray.join("\n").toUpperCase();
+  } catch {
+    return newKey.toUpperCase();
+  }
+}
