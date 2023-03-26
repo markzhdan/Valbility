@@ -219,7 +219,7 @@ Riot Games does not endorse or sponsor this project.
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [download-shield]: https://img.shields.io/badge/download-D30011?style=for-the-badge
-[download-url]: https://github.com/markzhdan/Valbility/releases/download/0.2.7/Valbility-Setup.exe
+[download-url]: https://github.com/markzhdan/Valbility/releases/download/0.2.75/Valbility-Setup.exe
 [releases-shield]: https://img.shields.io/github/downloads/markzhdan/Valbility/total
 [releases-url]: https://github.com/markzhdan/Valbility/releases
 [issues-shield]: https://img.shields.io/github/issues/markzhdan/Valbility
