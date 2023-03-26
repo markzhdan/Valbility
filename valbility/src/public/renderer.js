@@ -12,6 +12,7 @@ const micButton = document.getElementById("mic");
 const micIcon = document.getElementById("mic-icon");
 
 const settingsButton = document.getElementById("settings-button");
+const settingsIcon = document.getElementById("settings-icon");
 const menuPopup = document.getElementById("menu-popup");
 const resetButton = document.getElementById("reset-button");
 
@@ -30,16 +31,16 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 muteGameButton.addEventListener("click", () => {
-  audioButtonsClicked("is-game-muted", true, false, muteGameButton.checked);
+  audioButtonsClicked("is-game-muted", muteGameButton.checked);
 });
 muteVoiceButton.addEventListener("click", () => {
-  audioButtonsClicked("is-voice-muted", false, true, muteVoiceButton.checked);
+  audioButtonsClicked("is-voice-muted", muteVoiceButton.checked);
 });
-function audioButtonsClicked(key, muteGame, muteVoice, status) {
+function audioButtonsClicked(key, status) {
   // Sets user config to button status [ON/OFF]
   window.electronAPI.config.set(key, status);
   // Mutes/unmutes process when clicked
-  window.electronAPI.muteProcesses(muteGame, muteVoice, status);
+  window.electronAPI.muteProcesses(key, status);
 }
 
 thresholdSlider.addEventListener("change", () => {
@@ -84,6 +85,14 @@ settingsButton.addEventListener("click", () => {
   } else {
     menuPopup.style.visibility = "visible";
   }
+});
+document.body.addEventListener("click", (event) => {
+  if (event.target === settingsButton || event.target === settingsIcon) {
+    console.log("pressed");
+    return;
+  }
+  console.log("hidden");
+  menuPopup.style.visibility = "hidden";
 });
 
 resetButton.addEventListener("click", () => {

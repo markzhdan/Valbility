@@ -20,8 +20,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Known Bugs
 
-- Certain key binds crash app.
-- VALORANT stays muted when restarted without Valbility open.
+- Certain key binds don't currently work.
+
+## [0.2.7] - March 25, 2023
+
+Install new release from [releases](https://github.com/markzhdan/Valbility/releases/tag/0.2.7)
+
+### Added
+
+- Migrated from [node-audio-volume-mixer](https://www.npmjs.com/package/node-audio-volume-mixer) to [native-sound-mixer](https://www.npmjs.com/package/native-sound-mixer)
+  - Fixes bugs with not being able to mute VALORANT/voice chat.
+- Valbility now automatically unmutes processes when exiting.
+
+### Fixed
+
+- Settings menu now closes when unfocused.
+- Memory leaks.
+- Various mute/unmute bugs.
+- Config not saving.
 
 ## [0.2.5] - March 21, 2023
 

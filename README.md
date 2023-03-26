@@ -98,9 +98,9 @@ Muting game sound and voice chat removes the distracting background noise while 
 - [![ps-list][npm-ps-list]][npm-ps-list-url]
 - [![electron-builder][npm-electron-builder]][npm-electron-builder-url]
 - [![nutjs][npm-nut.js]][npm-nut.js-url]
-- [![audio-mixer][npm-audio-mixer]][npm-audio-mixer-url]
+- [![sound-mixer][npm-sound-mixer]][npm-sound-mixer-url]
 
-Thank you for creating these great modules.
+Thank you for creating these great modules!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -219,7 +219,7 @@ Riot Games does not endorse or sponsor this project.
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [download-shield]: https://img.shields.io/badge/download-D30011?style=for-the-badge
-[download-url]: https://github.com/markzhdan/Valbility/releases/download/0.2.5/Valbility-Setup.exe
+[download-url]: https://github.com/markzhdan/Valbility/releases/download/0.2.7/Valbility-Setup.exe
 [releases-shield]: https://img.shields.io/github/downloads/markzhdan/Valbility/total
 [releases-url]: https://github.com/markzhdan/Valbility/releases
 [issues-shield]: https://img.shields.io/github/issues/markzhdan/Valbility
@@ -241,5 +241,5 @@ Riot Games does not endorse or sponsor this project.
 [npm-electron-builder-url]: https://www.electron.build/
 [npm-nut.js]: https://img.shields.io/badge/nut.js-CB3837?style=for-the-badge-small&logo=npm&logoColor=ffffff
 [npm-nut.js-url]: https://www.npmjs.com/package/@nut-tree/nut-js
-[npm-audio-mixer]: https://img.shields.io/badge/audio--mixer-CB3837?style=for-the-badge-small&logo=npm&logoColor=ffffff
-[npm-audio-mixer-url]: https://www.npmjs.com/package/node-audio-volume-mixer
+[npm-sound-mixer]: https://img.shields.io/badge/sound--mixer-CB3837?style=for-the-badge-small&logo=npm&logoColor=ffffff
+[npm-sound-mixer-url]: https://www.npmjs.com/package/native-sound-mixer

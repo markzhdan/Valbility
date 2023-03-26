@@ -54,7 +54,6 @@ class ProcessesListener {
             (process) => process.name == processName
           );
           this.event.emit("started", {
-            pid: foundProcess.pid,
             name: foundProcess.name,
           });
         } else if (
@@ -69,7 +68,6 @@ class ProcessesListener {
             (process) => process.name == processName
           );
           this.event.emit("exited", {
-            pid: foundProcess.pid,
             name: foundProcess.name,
           });
         }

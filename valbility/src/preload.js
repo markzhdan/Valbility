@@ -3,8 +3,8 @@ const config = require("./data/store");
 
 contextBridge.exposeInMainWorld("electronAPI", {
   // Renderer to main functions
-  muteProcesses: (muteGame, muteVoice, status) =>
-    ipcRenderer.send("mute-processes", muteGame, muteVoice, status),
+  muteProcesses: (key, status) =>
+    ipcRenderer.send("mute-processes", key, status),
   registerNewHotkey: (configKey, newKey) =>
     ipcRenderer.send("register-new-hotkey", configKey, newKey),
   getValbilityVersion() {

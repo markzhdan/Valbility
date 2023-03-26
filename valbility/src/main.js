@@ -19,10 +19,9 @@ const {
   WindowChangeListener,
   getActiveWindow,
 } = require("./listeners/window-change-listener");
+const { Mixer } = require("./mixer");
 
 // Node Modules
-const activeWindow = require("active-win");
-const { NodeAudioVolumeMixer } = require("node-audio-volume-mixer");
 const { keyboard, Key } = require("@nut-tree/nut-js");
 const { autoUpdater } = require("electron-updater");
 
@@ -30,35 +29,23 @@ const { autoUpdater } = require("electron-updater");
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 keyboard.config.autoDelayMs = 0;
-const isDevMode = false;
+const isDevMode = true;
 
-const statusStyles = {
-  Offline: {
-    text: "Offline",
-    color: "gray",
+let valorantMixer = new Mixer("VALORANT", "VALORANT");
+let riotClientMixer = new Mixer("RiotClientServices", "RiotClientServices.exe");
+
+const styles = {
+  VALORANT: {
+    text: "Playing",
+    color: "forestgreen",
   },
   RiotClient: {
     text: "Client",
     color: "goldenrod",
   },
-  Valorant: {
-    text: "Playing",
-    color: "forestgreen",
-  },
-};
-
-const processes = {
-  VALORANT: {
-    pid: null,
-    started: false,
-  },
-  RiotClient: {
-    pid: null,
-    started: false,
-  },
-  Off: {
-    pid: null,
-    started: false,
+  Offline: {
+    text: "Offline",
+    color: "gray",
   },
 };
 
@@ -92,8 +79,12 @@ const createWindow = () => {
   ipcMain.on("config-set", async (e, key, value) => {
     config.set(key, value);
   });
-  ipcMain.on("mute-processes", (e, muteGame, muteVoice, status) => {
-    muteProcesses(muteGame, muteVoice, status);
+  ipcMain.on("mute-processes", (e, key, status) => {
+    if (key === "is-game-muted") {
+      status ? valorantMixer.mute() : valorantMixer.unmute();
+    } else {
+      status ? riotClientMixer.mute() : riotClientMixer.unmute();
+    }
   });
 
   ipcMain.on("register-new-hotkey", async (e, configKey, newKey) => {
@@ -142,7 +133,8 @@ const createWindow = () => {
     createDefaultShortcuts();
 
     // Unmutes processes
-    muteProcesses(true, true, false);
+    valorantMixer.unmute();
+    riotClientMixer.unmute();
   });
 
   ipcMain.on("press-voice-key", async (e, action) => {
@@ -177,33 +169,47 @@ app.whenReady().then(() => {
     "VALORANT.exe",
   ]);
 
-  listener.started(async ({ pid, name }) => {
+  listener.started(async ({ name }) => {
     if (name === "VALORANT.exe") {
-      updateStyle(pid, processes.VALORANT, statusStyles.Valorant);
-      muteProcesses(true, false, config.get("is-game-muted"));
-    } else if (!processes.VALORANT.started) {
-      // Riot Client accesses the correct pid
-      updateStyle(pid, processes.RiotClient, statusStyles.RiotClient);
-      muteProcesses(false, true, config.get("is-voice-muted"));
+      updateStyle(styles.VALORANT);
+
+      valorantMixer.appStarted = true;
+      await valorantMixer.ensureSessionIsSet();
+      config.get("is-game-muted")
+        ? valorantMixer.mute()
+        : valorantMixer.unmute();
+
+      await riotClientMixer.ensureSessionIsSet();
+      config.get("is-voice-muted")
+        ? riotClientMixer.mute()
+        : riotClientMixer.unmute();
+    } else {
+      riotClientMixer.appStarted = true;
+      if (!valorantMixer.appStarted) updateStyle(styles.RiotClient);
     }
   });
 
-  listener.exited(({ pid, name }) => {
+  listener.exited(async ({ name }) => {
     if (name === "VALORANT.exe") {
-      processes.VALORANT.started = false;
+      valorantMixer.unmute();
+      riotClientMixer.unmute();
 
-      if (processes.RiotClient.started) {
-        updateStyle(-1, processes.RiotClient, statusStyles.RiotClient);
+      valorantMixer.resetSession();
+      valorantMixer.appStarted = false;
+
+      riotClientMixer.resetSession();
+      riotClientMixer.appStarted = false;
+
+      if (riotClientMixer.appStarted) {
+        updateStyle(styles.RiotClient);
       } else {
-        updateStyle(-1, processes.Off, statusStyles.Offline);
+        updateStyle(styles.Offline);
       }
     } else {
-      processes.RiotClient.started = false;
-
-      if (processes.VALORANT.started) {
-        updateStyle(-1, processes.VALORANT, statusStyles.VALORANT);
+      if (valorantMixer.appStarted) {
+        updateStyle(styles.VALORANT);
       } else {
-        updateStyle(-1, processes.Off, statusStyles.Offline);
+        updateStyle(styles.Offline);
       }
     }
   });
@@ -222,19 +228,14 @@ app.whenReady().then(() => {
       windowInfo.name.includes("VALORANT") &&
       windowInfo.path.endsWith("VALORANT-Win64-Shipping.exe")
     ) {
-      processes.VALORANT.pid = windowInfo.pid;
-      muteProcesses(toMuteGame, toMuteVoice, false);
-    } else if (
-      windowInfo.title.includes("Riot Client") &&
-      windowInfo.name.includes("Riot Client") &&
-      windowInfo.path.includes("RiotClient")
-    ) {
-      processes.RiotClient.pid = windowInfo.pid;
-      muteProcesses(toMuteGame, toMuteVoice, true);
+      // VALORANT is in focus so unmute:
+      valorantMixer.unmute();
+      riotClientMixer.unmute();
     } else {
-      // If current window is not valorant or riot client
+      // If current window is not VALORANT
+      if (toMuteGame) valorantMixer.mute();
+      if (toMuteVoice) riotClientMixer.mute();
 
-      muteProcesses(toMuteGame, toMuteVoice, true);
       // If the user tabs out while talking, it doesnt get stuck in the down press.
       await keyboard.releaseKey(Key[config.get("valorant-voice-keybind")]);
       return;
@@ -286,7 +287,8 @@ autoUpdater.on("error", (info) => {
 // OS X / macOS specific.
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    muteProcesses(true, true, false);
+    valorantMixer.unmute();
+    riotClientMixer.unmute();
     app.quit();
   }
 });
@@ -297,60 +299,10 @@ app.on("will-quit", () => {
 });
 
 // App's specific main process code (helper functions):
-async function muteProcesses(toMuteGame, toMuteVoice, action) {
-  if (toMuteGame && processes.VALORANT.pid) {
-    // *NOTE:
-    // For some reason, ps-list does not give the accurate pid to match the audio session pid.
-    // However, the active-win module does retrieve the correct pid.
-    // This will be updated in the future so "./process-listener" will use the active-win module instead of ps-list
-    // Sometimes ps-works but active win doesnt
-
-    // Checks to make sure volume was changed. If not try new pid.
-    const muteStatusBefore = NodeAudioVolumeMixer.isAudioSessionMuted(
-      processes.VALORANT.pid
-    );
-    NodeAudioVolumeMixer.setAudioSessionMute(processes.VALORANT.pid, action);
-    if (
-      muteStatusBefore ===
-      NodeAudioVolumeMixer.isAudioSessionMuted(processes.VALORANT.pid)
-    ) {
-      // If valorant exited
-      try {
-        const actualPID = await getProcessPID("VALORANT");
-        NodeAudioVolumeMixer.setAudioSessionMute(actualPID, action);
-      } catch {
-        processes.VALORANT.pid = null;
-      }
-    }
-  }
-  if (toMuteVoice && processes.RiotClient.pid) {
-    NodeAudioVolumeMixer.setAudioSessionMute(processes.RiotClient.pid, action);
-  }
-}
-
-// Temporary function to get correct VALORANT pid on startup (*Read note above)
-function getProcessPID(processName) {
-  return activeWindow.getOpenWindows().then((openWindows) => {
-    const processWindow = openWindows.find(
-      (window) =>
-        window.title.includes(processName) &&
-        window.owner.path.includes(processName) &&
-        window.owner.name.includes(processName)
-    );
-    return processWindow.owner.processId;
-  });
-}
-
-function updateStyle(pid, processInfo, styles) {
-  processInfo.pid = pid;
-  processInfo.started = true;
+function updateStyle(style) {
   // Delay to ensure style change.
   setTimeout(() => {
-    mainWindow.webContents.send(
-      "update-status-style",
-      styles.text,
-      styles.color
-    );
+    mainWindow.webContents.send("update-status-style", style.text, style.color);
   }, 1000);
 }
 
@@ -366,9 +318,7 @@ function createVoiceGlobalShortcut(newKey) {
 }
 function createGameGlobalShortcut(newKey) {
   globalShortcut.register(newKey, () => {
-    const action = config.get("is-game-muted");
-    config.set("is-game-muted", !action);
-    muteProcesses(true, false, !action);
+    valorantMixer.flipMute();
   });
 }
 
