@@ -22,9 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Certain key binds don't currently work.
 
-## [0.2.7] - March 25, 2023
+## [0.2.75] - March 25, 2023
 
-Install new release from [releases](https://github.com/markzhdan/Valbility/releases/tag/0.2.7)
+Install new release from [releases](https://github.com/markzhdan/Valbility/releases/tag/0.2.75)
 
 ### Added
 
