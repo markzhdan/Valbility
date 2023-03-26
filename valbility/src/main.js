@@ -29,7 +29,7 @@ const { autoUpdater } = require("electron-updater");
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 keyboard.config.autoDelayMs = 0;
-const isDevMode = true;
+const isDevMode = false;
 
 let valorantMixer = new Mixer("VALORANT", "VALORANT");
 let riotClientMixer = new Mixer("RiotClientServices", "RiotClientServices.exe");
