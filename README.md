@@ -116,7 +116,7 @@ Simply download the installer from `releases`, run it, and the application will 
 
 ### Installation
 
-> **Note**
+> [!NOTE]
 >
 > Read <a href="#disclaimer">Disclaimer</a> before downloading.
 
@@ -209,7 +209,7 @@ Inspiration from:
 Valbility was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games.  
 Riot Games does not endorse or sponsor this project.
 
-> **Warning**
+> [!WARNING]
 >
 > Use of application is at the user's own risk. Valbility cannot guarantee that you will not get banned, however we have closely following Riot Games' 3rd Party Application API and privacy guidelines to create a safe experience for users.
 
